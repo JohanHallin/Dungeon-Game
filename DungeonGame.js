@@ -4,6 +4,7 @@ class room{
         this.width = width;
     }
 }
+
 var rooms = [];
 for(i = 0; i < 9; i++){
     newRoom = new room(rnd(3.0, 10.0), rnd(3.0, 10.0));
