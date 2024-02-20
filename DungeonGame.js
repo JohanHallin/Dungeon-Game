@@ -87,7 +87,7 @@ function drawRooms(){
     var y = -1;
     var x;
     for(var i = 0; i < 9; i++){
-        if(rooms[i].seen == true){
+        if(rooms[i].seen){
             context.fillStyle = "#333";
             context.fillRect((1 + rooms[i].x * 14 ) * pixelSize,(1 + rooms[i].y * 14 ) * pixelSize, (rooms[i].width + 2) * pixelSize, (rooms[i].height + 2) * pixelSize);
             context.fillStyle = "#999";
@@ -131,7 +131,7 @@ drawPaths();
 function drawPaths(){
     for(var i = 0; i < paths.length; i++){
         if(paths[i].seen){
-            context.fillStyle = "#999";
+            context.fillStyle = "#00f";
             if(paths[i].startX == paths[i].endX){
                 if(paths[i].startY < paths[i].endY){
                     context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, 2 * pixelSize, 16 * pixelSize);
