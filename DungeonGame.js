@@ -131,7 +131,7 @@ drawPaths();
 function drawPaths(){
     for(var i = 0; i < paths.length; i++){
         if(!paths[i].seen){
-            context.fillStyle = "#00f";
+            context.fillStyle = "#999";
             if(paths[i].startX == paths[i].endX){
                 if(paths[i].startY < paths[i].endY){
                     context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (rooms[paths[i].startX + 3 * paths[i].startY].height + 2 + 14 * paths[i].startY) * pixelSize, 2 * pixelSize, ((2 + 14 * paths[i].endY) - (rooms[paths[i].startX + 3 * paths[i].startY].height + 2 + 14 * paths[i].startY)) * pixelSize);
@@ -140,9 +140,9 @@ function drawPaths(){
                 }
             } else{
                 if(paths[i].startX < paths[i].endX){
-                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, -16 * pixelSize, 2 * pixelSize);
+                    context.fillRect((2 + rooms[paths[i].startX + 3 * paths[i].startY].width + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, ((2 + 14 * paths[i].endX) - (2 + 14 * paths[i].startX + rooms[paths[i].startX + 3 * paths[i].startY].width)) * pixelSize, 2 * pixelSize);
                 } else{
-                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, -16 * pixelSize, 2 * pixelSize);
+                    context.fillRect((2 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, ((2 + 14 * paths[i].startX) - (2 + 14 * paths[i].endX + rooms[paths[i].endX + 3 * paths[i].endY].width)) * -pixelSize, 2 * pixelSize);
                 }
             }
         }
