@@ -19,6 +19,7 @@ class path{
     }
 }
 
+var pixelSize = window.innerHeight / 42;
 var rooms = [];
 var startingRoom;
 var connected = [];
@@ -80,14 +81,13 @@ canvas.style.top = 0;
 canvas.style.left = 0;
 
 canvas.style.background = "#888";
-var pixelSize = window.innerHeight / 42;
 drawRooms();
 
 function drawRooms(){
     var y = -1;
     var x;
     for(var i = 0; i < 9; i++){
-        if(rooms[i].seen){
+        if(rooms[i].seen || true){
             context.fillStyle = "#333";
             context.fillRect((1 + rooms[i].x * 14 ) * pixelSize,(1 + rooms[i].y * 14 ) * pixelSize, (rooms[i].width + 2) * pixelSize, (rooms[i].height + 2) * pixelSize);
             context.fillStyle = "#999";
@@ -130,17 +130,17 @@ function generatePaths(){
 drawPaths();
 function drawPaths(){
     for(var i = 0; i < paths.length; i++){
-        if(paths[i].seen){
+        if(!paths[i].seen){
             context.fillStyle = "#00f";
             if(paths[i].startX == paths[i].endX){
                 if(paths[i].startY < paths[i].endY){
-                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, 2 * pixelSize, 16 * pixelSize);
+                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (rooms[paths[i].startX + 3 * paths[i].startY].height + 2 + 14 * paths[i].startY) * pixelSize, 2 * pixelSize, ((2 + 14 * paths[i].endY) - (rooms[paths[i].startX + 3 * paths[i].startY].height + 2 + 14 * paths[i].startY)) * pixelSize);
                 } else{
-                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, 2 * pixelSize, -16 * pixelSize);
+                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (2 + 14 * paths[i].startY) * pixelSize, 2 * pixelSize, ((paths[i].startY * 14 + 2) - (rooms[paths[i].endX + 3 * paths[i].endY].height + 2 + 14 * paths[i].endY)) * -pixelSize);
                 }
             } else{
                 if(paths[i].startX < paths[i].endX){
-                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, 16 * pixelSize, 2 * pixelSize);
+                    context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, -16 * pixelSize, 2 * pixelSize);
                 } else{
                     context.fillRect((6 + 14 * paths[i].startX) * pixelSize, (6 + 14 * paths[i].startY) * pixelSize, -16 * pixelSize, 2 * pixelSize);
                 }
