@@ -26,6 +26,7 @@ var connected = [];
 var paths = [];
 var x = 0;
 var y = 0;
+var drawAll = false;
 for(i = 0; i < 9; i++){
     newRoom = new room(rnd(6, 10), rnd(6, 10), x, y);
     rooms.push(newRoom);
@@ -45,8 +46,8 @@ for(var i = 0; i < 9; i++){
 }
 selectStartingRoom();
 function regenerateRoom(){
-    x = 1;
-    y = 1;
+    x = 0;
+    y = 0;
     for(i=0; i < 9; i++){
         rooms[i].height = rnd(3, 10);
         rooms[i].width = rnd(3, 10);
@@ -58,6 +59,7 @@ function regenerateRoom(){
             y++;
         }
     }
+    console.log(rooms);
     selectStartingRoom();
 }
 
@@ -87,7 +89,7 @@ function drawRooms(){
     var y = -1;
     var x;
     for(var i = 0; i < 9; i++){
-        if(rooms[i].seen){
+        if(rooms[i].seen || drawAll){
             context.fillStyle = "#333";
             context.fillRect((1 + rooms[i].x * 14 ) * pixelSize,(1 + rooms[i].y * 14 ) * pixelSize, (rooms[i].width + 2) * pixelSize, (rooms[i].height + 2) * pixelSize);
             context.fillStyle = "#999";
@@ -130,7 +132,7 @@ function generatePaths(){
 drawPaths();
 function drawPaths(){
     for(var i = 0; i < paths.length; i++){
-        if(paths[i].seen){
+        if(paths[i].seen || drawAll){
             if(paths[i].startX == paths[i].endX){
                 if(paths[i].startY < paths[i].endY){
                     context.fillStyle = "#333";
@@ -158,4 +160,21 @@ function drawPaths(){
             }
         }
     }
+}
+function debug(){
+    drawAll = !drawAll;
+    redrawAll();
+}
+
+function redrawAll(){
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawRooms();
+    drawPaths();
+}
+
+function regenerateMap(){
+    regenerateRoom();
+    selectStartingRoom();
+    generatePaths();
+    redrawAll();
 }
