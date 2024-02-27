@@ -19,6 +19,16 @@ class path{
     }
 }
 
+class player{
+    constructor(){
+        this.x = 0; // player x position
+        this.y = 0; // player y position
+        this.facing = 3; // 0-up   1-left   2-down   3-right 
+    }
+}
+
+
+Player = new player();
 var pixelSize = window.innerHeight / 42;
 var rooms = [];
 var startingRoom;
@@ -178,3 +188,27 @@ function regenerateMap(){
     generatePaths();
     redrawAll();
 }
+
+var moved = false;
+
+var pressedKeys = {};
+document.onkeydown = function(ev) { pressedKeys[ev.key] = true; console.log(pressedKeys); gameTick() };
+document.onkeyup = function(ev) { pressedKeys[ev.key] = undefined; console.log(pressedKeys); moved = false;};
+
+function gameTick(){
+    if(pressedKeys.w || pressedKeys.a || pressedKeys.s || pressedKeys.d){
+        if(!moved){
+            if(pressedKeys.w){
+                
+            } else if(pressedKeys.s){
+                
+            } else if(pressedKeys.a){
+
+            } else if(pressedKeys.d){
+
+            }
+            moved = true;
+        }
+    }
+}
+
