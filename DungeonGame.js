@@ -12,6 +12,16 @@ class Room{
         this.position = position;
         this.size = size;
         this.seen = false;
+        this.neighbours = [];
+    }
+}
+
+// Defines what a path is
+class Path{
+    constructor(start, end){
+        this.start = start;
+        this.end = end;
+        this.seen = false;
     }
 }
 
@@ -28,27 +38,34 @@ function rnd(in1, in2){
 // Calls alls functions that need to run at start
 function startUp(){
     generateRooms();
+    calculateNeighbours();
     selectStartingRoom();
+    generatePaths();
     canvas.style.background = "#888";
     onresize();
 }
 
 // Debug settings
 // False by default 
-var seeAll = true;
+var seeAllRooms = true;
+var seeAllPaths = true;
+var seeStartingRoom = true;
 
 // Map settings
 var layout = new Vector2(5, 3);
 var roomMargin = 2;
-var roomMinSize = new Vector2(5, 5);
+var roomMinSize = new Vector2(6, 6);
 var roomMaxSize = new Vector2(10, 10);
 var wallThickness = 1;
+var pathWidth = 2;
 var startingRoom;
 function selectStartingRoom(){
-    startingRoom = new Vector2(rnd(layout.x), rnd(layout.y));
+    startingRoom = new Vector2(rnd(layout.x - 1), rnd(layout.y - 1));
+    rooms[startingRoom.x][startingRoom.y].seen = true;
 }
 
 // Map data
+var paths;
 var rooms;
 function generateRooms(){
     rooms = [];
@@ -83,6 +100,7 @@ window.onresize = function(ev) {
 function draw(){
     clearCanvas();
     drawRooms();
+    drawPaths();
 }
 
 // Clears canvas
@@ -94,10 +112,92 @@ function clearCanvas(){
 function drawRooms(){
     for(var x = 0; x < rooms.length; x++){
         for(var y = 0; y < rooms[x].length; y++){
-            if(rooms[x][y].seen || seeAll){
+            if(rooms[x][y].seen || seeAllRooms){
                 context.fillStyle = "#999";
                 context.fillRect(rooms[x][y].position.x * pixelSize.x, rooms[x][y].position.y * pixelSize.y, rooms[x][y].size.x * pixelSize.x, rooms[x][y].size.y * pixelSize.y);
             }
         }
     }
+    if(seeStartingRoom){
+        context.fillStyle = "#F00";
+        context.fillRect(rooms[startingRoom.x][startingRoom.y].position.x * pixelSize.x, rooms[startingRoom.x][startingRoom.y].position.y * pixelSize.y, 1 * pixelSize.x, 1 * pixelSize.y);
+    }
+}
+
+// Draws all paths
+function drawPaths(){
+    for(var i = 0; i < paths.length; i++){
+        if(paths[i].seen || seeAllPaths){
+            context.beginPath();
+            context.strokeStyle = "#999";
+            if(paths[i].start.x == paths[i].end.x){
+                context.lineWidth = pathWidth * pixelSize.x;
+            }else{
+                context.lineWidth = pathWidth * pixelSize.y;
+            }
+            context.moveTo(paths[i].start.x * pixelSize.x, paths[i].start.y * pixelSize.y);
+            context.lineTo(paths[i].end.x * pixelSize.x, paths[i].end.y * pixelSize.y);
+            context.stroke();
+        }
+    }
+}
+
+// Generate paths
+function generatePaths(){
+    paths = [];
+    var connected = {};
+    connected[startingRoom.x + ", " + startingRoom.y] = true;
+    var temp = 0;
+    while(paths.length < layout.x * layout.y - 1){
+        for(x = 0; x < layout.x; x++){
+            for(y = 0; y < layout.y; y++){
+
+                // Checks if neighbours are connected to start
+                var connectedNeighbours = [];
+                for(var i = 0; i < rooms[x][y].neighbours.length; i++){
+                    var neighbour = rooms[x][y].neighbours[i];
+                    if(connected[neighbour.x + ", " + neighbour.y]) {
+                        connectedNeighbours.push(neighbour);
+                    }
+                }
+                console.log("ConnectedNeighbours " + (connectedNeighbours.length != 0));
+                console.log("Not connected " + !connected[x + ", " + y]);
+                // Creates new path if room has any connected neighbours and if the room itself isn't connected 
+                if((connectedNeighbours.length != 0) && !connected[x + ", " + y]){
+                    connected[x + ", " + y] = true;
+                    var i = rnd(connectedNeighbours.length - 1);
+                    var target = connectedNeighbours[i];
+                    if(rooms[x][y].position.x < rooms[target.x][target.y].position.x){          // Neighbour to right
+                        paths.push(new Path(new Vector2(rooms[x][y].position.x + rooms[x][y].size.x, rooms[x][y].position.y + roomMinSize.y / 2), new Vector2(rooms[target.x][target.y].position.x, rooms[x][y].position.y + roomMinSize.y / 2)));
+                    }else if(rooms[x][y].position.x > rooms[target.x][target.y].position.x){    // Neighbour to left
+                        paths.push(new Path(new Vector2(rooms[x][y].position.x, rooms[x][y].position.y + roomMinSize.y / 2), new Vector2(rooms[target.x][target.y].position.x + rooms[target.x][target.y].size.x, rooms[x][y].position.y + roomMinSize.y / 2)));
+                    }else if(rooms[x][y].position.y > rooms[target.x][target.y].position.y){    // Neighbour above
+                        paths.push(new Path(new Vector2(rooms[x][y].position.x + roomMinSize.x / 2, rooms[x][y].position.y), new Vector2(rooms[x][y].position.x + roomMinSize.x / 2, rooms[target.x][target.y].position.y + rooms[target.x][target.y].size.y)));
+                    } else{                                                                     // Neighbour below
+                        paths.push(new Path(new Vector2(rooms[x][y].position.x + roomMinSize.x / 2, rooms[x][y].position.y + rooms[x][y].size.y), new Vector2(rooms[x][y].position.x + roomMinSize.x / 2, rooms[target.x][target.y].position.y)));
+                    }
+                    console.log(paths[paths.length - 1]);
+                }
+            }
+        }
+        temp++;
+    }
+    console.log(temp + " iterations");
+    console.log(paths);
+}
+
+// Calculates which rooms any room is neighbouring
+function calculateNeighbours(){
+ for(var x = 0; x < layout.x; x++){
+    for(var y = 0; y < layout.y; y++){
+        
+        for(var xComp = 0; xComp < layout.x; xComp++){
+            for(var yComp = 0; yComp < layout.y; yComp++){
+                if((x == xComp && (y == yComp - 1 || y == yComp + 1)) || (y == yComp && (x == xComp - 1 || x == xComp + 1))){
+                    rooms[x][y].neighbours.push(new Vector2(xComp, yComp));
+                }
+            }
+        }
+    }
+ }
 }
