@@ -160,8 +160,6 @@ function generatePaths(){
                         connectedNeighbours.push(neighbour);
                     }
                 }
-                console.log("ConnectedNeighbours " + (connectedNeighbours.length != 0));
-                console.log("Not connected " + !connected[x + ", " + y]);
                 // Creates new path if room has any connected neighbours and if the room itself isn't connected 
                 if((connectedNeighbours.length != 0) && !connected[x + ", " + y]){
                     connected[x + ", " + y] = true;
@@ -174,17 +172,13 @@ function generatePaths(){
                         paths.push(new Path(new Vector2(start.position.x, start.position.y + roomMinSize.y / 2), new Vector2(end.position.x + end.size.x, start.position.y + roomMinSize.y / 2)));
                     }else if(start.position.y > end.position.y){    // Neighbour above
                         paths.push(new Path(new Vector2(start.position.x + roomMinSize.x / 2, start.position.y), new Vector2(start.position.x + roomMinSize.x / 2, end.position.y + end.size.y)));
-                    } else{                                                                     // Neighbour below
+                    } else{                                         // Neighbour below
                         paths.push(new Path(new Vector2(start.position.x + roomMinSize.x / 2, start.position.y + start.size.y), new Vector2(start.position.x + roomMinSize.x / 2, end.position.y)));
                     }
-                    console.log(paths[paths.length - 1]);
                 }
             }
         }
-        temp++;
     }
-    console.log(temp + " iterations");
-    console.log(paths);
 }
 
 // Calculates which rooms any room is neighbouring
