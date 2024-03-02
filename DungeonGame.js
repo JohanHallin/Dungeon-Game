@@ -8,8 +8,8 @@ class Vector2{
 
 // Defines what a rooms is
 class Room{
-    constructor(position, size){
-        this.position = position;
+    constructor(pos, size){
+        this.pos = pos;
         this.size = size;
         this.seen = false;
         this.neighbours = [];
@@ -114,13 +114,13 @@ function drawRooms(){
         for(var y = 0; y < rooms[x].length; y++){
             if(rooms[x][y].seen || seeAllRooms){
                 context.fillStyle = "#999";
-                context.fillRect(rooms[x][y].position.x * pixelSize.x, rooms[x][y].position.y * pixelSize.y, rooms[x][y].size.x * pixelSize.x, rooms[x][y].size.y * pixelSize.y);
+                context.fillRect(rooms[x][y].pos.x * pixelSize.x, rooms[x][y].pos.y * pixelSize.y, rooms[x][y].size.x * pixelSize.x, rooms[x][y].size.y * pixelSize.y);
             }
         }
     }
     if(seeStartingRoom){
         context.fillStyle = "#F00";
-        context.fillRect(rooms[startingRoom.x][startingRoom.y].position.x * pixelSize.x, rooms[startingRoom.x][startingRoom.y].position.y * pixelSize.y, 1 * pixelSize.x, 1 * pixelSize.y);
+        context.fillRect(rooms[startingRoom.x][startingRoom.y].pos.x * pixelSize.x, rooms[startingRoom.x][startingRoom.y].pos.y * pixelSize.y, 1 * pixelSize.x, 1 * pixelSize.y);
     }
 }
 
@@ -166,14 +166,14 @@ function generatePaths(){
                     var i = rnd(connectedNeighbours.length - 1);
                     var start = rooms[x][y];
                     var end = rooms[connectedNeighbours[i].x][connectedNeighbours[i].y];
-                    if(start.position.x < end.position.x){          // Neighbour to right
-                        paths.push(new Path(new Vector2(start.position.x + start.size.x, start.position.y + roomMinSize.y / 2), new Vector2(end.position.x, start.position.y + roomMinSize.y / 2)));
-                    }else if(start.position.x > end.position.x){    // Neighbour to left
-                        paths.push(new Path(new Vector2(start.position.x, start.position.y + roomMinSize.y / 2), new Vector2(end.position.x + end.size.x, start.position.y + roomMinSize.y / 2)));
-                    }else if(start.position.y > end.position.y){    // Neighbour above
-                        paths.push(new Path(new Vector2(start.position.x + roomMinSize.x / 2, start.position.y), new Vector2(start.position.x + roomMinSize.x / 2, end.position.y + end.size.y)));
+                    if(start.pos.x < end.pos.x){          // Neighbour to right
+                        paths.push(new Path(new Vector2(start.pos.x + start.size.x, start.pos.y + roomMinSize.y / 2), new Vector2(end.pos.x, start.pos.y + roomMinSize.y / 2)));
+                    }else if(start.pos.x > end.pos.x){    // Neighbour to left
+                        paths.push(new Path(new Vector2(start.pos.x, start.pos.y + roomMinSize.y / 2), new Vector2(end.pos.x + end.size.x, start.pos.y + roomMinSize.y / 2)));
+                    }else if(start.pos.y > end.pos.y){    // Neighbour above
+                        paths.push(new Path(new Vector2(start.pos.x + roomMinSize.x / 2, start.pos.y), new Vector2(start.pos.x + roomMinSize.x / 2, end.pos.y + end.size.y)));
                     } else{                                         // Neighbour below
-                        paths.push(new Path(new Vector2(start.position.x + roomMinSize.x / 2, start.position.y + start.size.y), new Vector2(start.position.x + roomMinSize.x / 2, end.position.y)));
+                        paths.push(new Path(new Vector2(start.pos.x + roomMinSize.x / 2, start.pos.y + start.size.y), new Vector2(start.pos.x + roomMinSize.x / 2, end.pos.y)));
                     }
                 }
             }
