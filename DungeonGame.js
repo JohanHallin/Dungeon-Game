@@ -8,8 +8,8 @@ class Vector2{
 
 // Defines what a rooms is
 class Room{
-    constructor(pos, size){
-        this.pos = pos;
+    constructor(position, size){
+        this.position = position;
         this.size = size;
         this.seen = false;
         this.neighbours = [];
@@ -114,13 +114,13 @@ function drawRooms(){
         for(var y = 0; y < rooms[x].length; y++){
             if(rooms[x][y].seen || seeAllRooms){
                 context.fillStyle = "#999";
-                context.fillRect(rooms[x][y].pos.x * pixelSize.x, rooms[x][y].pos.y * pixelSize.y, rooms[x][y].size.x * pixelSize.x, rooms[x][y].size.y * pixelSize.y);
+                context.fillRect(rooms[x][y].position.x * pixelSize.x, rooms[x][y].position.y * pixelSize.y, rooms[x][y].size.x * pixelSize.x, rooms[x][y].size.y * pixelSize.y);
             }
         }
     }
     if(seeStartingRoom){
         context.fillStyle = "#F00";
-        context.fillRect(rooms[startingRoom.x][startingRoom.y].pos.x * pixelSize.x, rooms[startingRoom.x][startingRoom.y].pos.y * pixelSize.y, 1 * pixelSize.x, 1 * pixelSize.y);
+        context.fillRect(rooms[startingRoom.x][startingRoom.y].position.x * pixelSize.x, rooms[startingRoom.x][startingRoom.y].position.y * pixelSize.y, 1 * pixelSize.x, 1 * pixelSize.y);
     }
 }
 
