@@ -6,6 +6,15 @@ class Vector2{
     }
 }
 
+// Defines the player
+class Player{
+    constructor(pos, rot, sprite){
+        this.pos = pos;
+        this.rot = rot;
+        this.sprite = sprite;
+    }
+}
+
 // Defines what a rooms is
 class Room{
     constructor(pos, size){
@@ -149,7 +158,6 @@ function generatePaths(){
     paths = [];
     var connected = {};
     connected[startingRoom.x + ", " + startingRoom.y] = true;
-    var temp = 0;
     while(paths.length < layout.x * layout.y - 1){
         for(x = 0; x < layout.x; x++){
             for(y = 0; y < layout.y; y++){
@@ -164,18 +172,20 @@ function generatePaths(){
                 }
                 // Creates new path if room has any connected neighbours and if the room itself isn't connected 
                 if((connectedNeighbours.length != 0) && !connected[x + ", " + y]){
-                    connected[x + ", " + y] = true;
-                    var i = rnd(connectedNeighbours.length - 1);
-                    var start = rooms[x][y];
-                    var end = rooms[connectedNeighbours[i].x][connectedNeighbours[i].y];
-                    if(start.pos.x < end.pos.x){          // Neighbour to right
-                        paths.push(new Path(new Vector2(start.pos.x + start.size.x, start.pos.y + roomMinSize.y / 2), new Vector2(end.pos.x, start.pos.y + roomMinSize.y / 2)));
-                    }else if(start.pos.x > end.pos.x){    // Neighbour to left
-                        paths.push(new Path(new Vector2(start.pos.x, start.pos.y + roomMinSize.y / 2), new Vector2(end.pos.x + end.size.x, start.pos.y + roomMinSize.y / 2)));
-                    }else if(start.pos.y > end.pos.y){    // Neighbour above
-                        paths.push(new Path(new Vector2(start.pos.x + roomMinSize.x / 2, start.pos.y), new Vector2(start.pos.x + roomMinSize.x / 2, end.pos.y + end.size.y)));
-                    } else{                                         // Neighbour below
-                        paths.push(new Path(new Vector2(start.pos.x + roomMinSize.x / 2, start.pos.y + start.size.y), new Vector2(start.pos.x + roomMinSize.x / 2, end.pos.y)));
+                    var i = rnd(connectedNeighbours.length);
+                    if(i < connectedNeighbours.length){
+                        connected[x + ", " + y] = true;
+                        var start = rooms[x][y];
+                        var end = rooms[connectedNeighbours[i].x][connectedNeighbours[i].y];
+                        if(start.pos.x < end.pos.x){          // Neighbour to right
+                            paths.push(new Path(new Vector2(start.pos.x + start.size.x, start.pos.y + roomMinSize.y / 2), new Vector2(end.pos.x, start.pos.y + roomMinSize.y / 2)));
+                        }else if(start.pos.x > end.pos.x){    // Neighbour to left
+                            paths.push(new Path(new Vector2(start.pos.x, start.pos.y + roomMinSize.y / 2), new Vector2(end.pos.x + end.size.x, start.pos.y + roomMinSize.y / 2)));
+                        }else if(start.pos.y > end.pos.y){    // Neighbour above
+                            paths.push(new Path(new Vector2(start.pos.x + roomMinSize.x / 2, start.pos.y), new Vector2(start.pos.x + roomMinSize.x / 2, end.pos.y + end.size.y)));
+                        } else{                                         // Neighbour below
+                            paths.push(new Path(new Vector2(start.pos.x + roomMinSize.x / 2, start.pos.y + start.size.y), new Vector2(start.pos.x + roomMinSize.x / 2, end.pos.y)));
+                        }
                     }
                 }
             }
