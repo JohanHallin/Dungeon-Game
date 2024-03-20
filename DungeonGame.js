@@ -63,7 +63,7 @@ var seeAllPaths = true;
 var seeStartingRoom = true;
 
 // Map settings
-var layout = new Vector2(100, 60);
+var layout = new Vector2(5, 3);
 var roomMargin = 2;
 var roomMinSize = new Vector2(6, 6);
 var roomMaxSize = new Vector2(10, 10);
