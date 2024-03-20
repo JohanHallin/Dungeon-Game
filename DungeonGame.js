@@ -27,10 +27,12 @@ class Path{
 
 // Generate random whole number between
 function rnd(in1, in2){
-    if(in2 != undefined){
+    if(in1 < in2){
         return Math.round(in1 + (in2 - in1) * Math.random()); // in2 and in1 value
-    } else{
+    } else if(in1 != undefined){
         return Math.round(in1 * Math.random()); // 0 and in1
+    } else{
+        return undefined;
     }
 }
 
@@ -52,7 +54,7 @@ var seeAllPaths = true;
 var seeStartingRoom = true;
 
 // Map settings
-var layout = new Vector2(5, 3);
+var layout = new Vector2(100, 60);
 var roomMargin = 2;
 var roomMinSize = new Vector2(6, 6);
 var roomMaxSize = new Vector2(10, 10);
